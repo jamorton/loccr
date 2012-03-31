@@ -1,4 +1,6 @@
-LOCCR is the Lines of Code Counter in Rust.
+LOCCR is a Lines of Code Counter in Rust.
+It recursively searches a directory for files with a given extension, counting lines.
+A new task is spawned for each sub-directory found.
 
 Testing:
 
