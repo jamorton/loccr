@@ -12,28 +12,30 @@ fn add_lines(a: line_info, b:line_info)
 }
 
 // read_line does not appear in the reader interface for some reason
-fn read_line(file: io::reader) -> str
+fn read_line(file: io::reader, name: str) -> str
 {
+    let mut line = 0u;
     let mut buf: [u8] = [];
     while true {
         let ch = file.read_byte();
-        if ch == -1 || ch == 10 { break; }
+        if ch == -1 || ch == 10 { line += 1u; break; }
         buf += [ch as u8];
+    }
+    if !str::is_utf8(buf) {
+        io::println(#fmt("NOT UTF8: %s line %u", name, line));
+        ret "a"; // count as non-blank line
     }
     ret str::from_bytes(buf);
 }
 
 // count lines on one file
 fn count_lines(file_path: str) -> line_info {
-    
     let file = result::get(io::file_reader(file_path));
     let count = line_info();
     
     while true {
-        let line = read_line(file);
-        if file.eof() {
-            break
-        }
+        let line = read_line(file, file_path);
+        if file.eof() { break; }
         if str::is_empty(str::trim(line)) {
             count.blank += 1u;
         } else {
@@ -81,8 +83,8 @@ fn count_dir(dir_path: str, extensions: [str]) -> dir_info {
 }
 
 fn main(args: [str]) {
+    
     if vec::len(args) == 3u {
-
         let path = args[1];
         let ext  = args[2];
 
@@ -94,9 +96,9 @@ fn main(args: [str]) {
         let total = res.code + res.blank;
         io::println(#fmt("Line count: %u code %u blank (%u total) in %u files",
                          res.code, res.blank, total, num_files));
-
     } else {
         io::println("Usage: loccr [path] [extensions]");
         io::println("  Example: ./loccr src rs,cpp,h");
     }
+    
 }

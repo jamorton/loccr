@@ -11,6 +11,4 @@ Testing:
 
 Todo:
   Add language-specific filters for finding comments and such.
-  Multiple file extensions at once.
-  UTF-8 problem when reading certian files?
   
