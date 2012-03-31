@@ -5,7 +5,7 @@ A new task is spawned for each sub-directory found
 
 Testing:
 	Compare
-		`./loccr test .txt`
+		`./loccr test txt`
 	with
 		`find test -name "*.txt" | xargs wc -l`
 

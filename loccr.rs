@@ -85,11 +85,18 @@ fn main(args: [str]) {
 
         let path = args[1];
         let ext  = args[2];
+
+        let exts = vec::map(str::split_char(ext, ',')) {|e|
+            "." + e
+        };
     
-        let (res, num_files) = count_dir(path, [ext]);
-        io::println(#fmt("Line count: %u code %u blank (%u total) in %u files", res.code, res.blank, res.code + res.blank, num_files));
+        let (res, num_files) = count_dir(path, exts);
+        let total = res.code + res.blank;
+        io::println(#fmt("Line count: %u code %u blank (%u total) in %u files",
+                         res.code, res.blank, total, num_files));
 
     } else {
-        io::println("Usage: loccr [path] [extension]");
+        io::println("Usage: loccr [path] [extensions]");
+        io::println("  Example: ./loccr src rs,cpp,h");
     }
 }
