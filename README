@@ -1,2 +1,9 @@
 LOCCR is the Lines of Code Counter in Rust.
 
+Testing:
+
+	Compare
+		`./loccr test .txt`
+	with
+		`find test -name "*.txt" | xargs wc -l`
+

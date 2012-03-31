@@ -29,15 +29,17 @@ fn count_lines(file_path: str) -> line_info {
     let file = result::get(io::file_reader(file_path));
     let count = line_info();
     
-    while !file.eof() {
+    while true {
         let line = read_line(file);
+        if file.eof() {
+            break
+        }
         if str::is_empty(str::trim(line)) {
             count.blank += 1u;
         } else {
             count.code += 1u;
         }
     }
-    io::println(#fmt(" %u %s", count.code + count.blank, file_path));
     ret count;
 }
 
@@ -79,6 +81,15 @@ fn count_dir(dir_path: str, extensions: [str]) -> dir_info {
 }
 
 fn main(args: [str]) {
-    let (res, num_files) = count_dir("test", [".txt"]);
-    io::println(#fmt("Line count: %u code %u blank in (%u total) in %u files", res.code, res.blank, res.code + res.blank, num_files));
+    if vec::len(args) == 3u {
+
+        let path = args[1];
+        let ext  = args[2];
+    
+        let (res, num_files) = count_dir(path, [ext]);
+        io::println(#fmt("Line count: %u code %u blank (%u total) in %u files", res.code, res.blank, res.code + res.blank, num_files));
+
+    } else {
+        io::println("Usage: loccr [path] [extension]");
+    }
 }
